@@ -1,0 +1,251 @@
+[
+    {
+        "id": "9d6b8c38551dd5ee",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "be1ce9847dc8c98a",
+        "type": "http in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "url": "/simple",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 920,
+        "wires": [
+            [
+                "178e816e06f7fa53"
+            ]
+        ]
+    },
+    {
+        "id": "178e816e06f7fa53",
+        "type": "template",
+        "z": "9d6b8c38551dd5ee",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<h1>Upload a file here:</h1>\n\n<form action=\"/upload\" method=\"POST\" enctype=\"multipart/form-data\">\n    <input type=\"file\" name=\"myFile\" />\n    <input type=\"submit\" value=\"Submit\">\n</form>",
+        "output": "str",
+        "x": 410,
+        "y": 920,
+        "wires": [
+            [
+                "de7c30e105fad3fe"
+            ]
+        ]
+    },
+    {
+        "id": "de7c30e105fad3fe",
+        "type": "http response",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "x": 610,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "6f3460b17392afe1",
+        "type": "http response",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1070,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "0b87f759b607030c",
+        "type": "http in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "url": "/analyzeScript",
+        "method": "post",
+        "upload": true,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 340,
+        "wires": [
+            [
+                "6bbd66769d46cc62"
+            ]
+        ]
+    },
+    {
+        "id": "4669b3589f910d74",
+        "type": "template",
+        "z": "9d6b8c38551dd5ee",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Embedded PNG</title>\n</head>\n<body>\n\n<h2>Activity diagram</h2>\n\n<img src=\"data:image/png;base64,{{image}}\"\n     style=\"max-width:100%; border:1px solid #ccc;\" />\n\n</body>\n</html>\n",
+        "output": "str",
+        "x": 890,
+        "y": 520,
+        "wires": [
+            [
+                "6f3460b17392afe1"
+            ]
+        ]
+    },
+    {
+        "id": "6bbd66769d46cc62",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "toBase64",
+        "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 260,
+        "wires": [
+            [
+                "47d871dfaf64dd3b"
+            ]
+        ]
+    },
+    {
+        "id": "47d871dfaf64dd3b",
+        "type": "LLM Chat",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Construct activity diagram",
+        "platform": "fca7f12e28e98b4c",
+        "tools": "",
+        "tool_choice": "none",
+        "conversation_id": "",
+        "user": "return msg.payload",
+        "system": "return \"Generate PlantUML activity diagram based on input. No comments or explanations, pure plantuml, without any additional start/begin tags.\"",
+        "historyLimit": 7,
+        "x": 410,
+        "y": 260,
+        "wires": [
+            [
+                "c58ae279e87c0352"
+            ]
+        ]
+    },
+    {
+        "id": "c58ae279e87c0352",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "post-process LLM response",
+        "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 260,
+        "wires": [
+            [
+                "a0f9099a6dd020b6"
+            ]
+        ]
+    },
+    {
+        "id": "a0f9099a6dd020b6",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Render PlantUML",
+        "func": "var gen = plantuml.generate(msg.payload);\ngen.out.pipe(fs.createWriteStream(\"C:/Users/Public/output.png\"));\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "plantuml",
+                "module": "node-plantuml"
+            },
+            {
+                "var": "fs",
+                "module": "fs"
+            }
+        ],
+        "x": 910,
+        "y": 260,
+        "wires": [
+            [
+                "9f160178276c3ed6",
+                "1408a78576fd037b"
+            ]
+        ]
+    },
+    {
+        "id": "9f160178276c3ed6",
+        "type": "debug",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Preview PlantUML",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "1408a78576fd037b",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Embedd image",
+        "func": "const imagePath = \"C:/Users/Public/output.png\"; // CHANGE IF NEEDED\n\nif (!fs.existsSync(imagePath)) {\n    msg.payload = \"<h2>Image not found</h2>\";\n    return msg;\n}\n\n// Convert PNG to Base64\nconst imageBase64 = fs.readFileSync(imagePath).toString(\"base64\");\n\n// Pass to template\nmsg.image = imageBase64;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "fs",
+                "module": "fs"
+            }
+        ],
+        "x": 880,
+        "y": 400,
+        "wires": [
+            [
+                "4669b3589f910d74"
+            ]
+        ]
+    },
+    {
+        "id": "fca7f12e28e98b4c",
+        "type": "platform-configuration",
+        "name": "prompt 1",
+        "platform": "gpt",
+        "url": "",
+        "model": "gpt-4o"
+    },
+    {
+        "id": "a181f4ef7be0c17b",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@technithusiast/node-red-contrib-ai-intent": "3.2.4"
+        }
+    }
+]
