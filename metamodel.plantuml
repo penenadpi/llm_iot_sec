@@ -1,0 +1,54 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class FieldDevice {
+  id: String
+  role: DataSource
+}
+
+class EdgeGateway {
+  id: String
+  role: Aggregator
+}
+
+class ControlService {
+  id: String
+  role: Controller
+}
+
+class ManagementServer {
+  id: String
+  role: Manager
+}
+
+class AnalyticsService {
+  id: String
+  role: ExternalConsumer
+}
+
+' Communication links
+FieldDevice "1" -- "1" EdgeGateway : dataLink
+EdgeGateway "1" -- "1" ControlService : secureControlLink
+EdgeGateway "1" -- "1" ManagementServer : secureMgmtLink
+EdgeGateway "1" -- "1" AnalyticsService : secureTelemetryLink
+
+' Notes must be attached to elements, not link labels
+note on link EdgeGateway--ControlService
+protocol = HTTPS
+encrypted = true
+domain = Edge
+end note
+
+note on link EdgeGateway--ManagementServer
+protocol = NETCONF
+encrypted = true
+domain = Core
+end note
+
+note on link EdgeGateway--AnalyticsService
+protocol = HTTPS
+encrypted = true
+domain = External
+end note
+
+@enduml
