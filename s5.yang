@@ -1,0 +1,19 @@
+module scenario5 {
+  yang-version 1.1;
+  namespace "urn:example:scenario5";
+  prefix s5;
+
+  container scenario5 {
+    description "Premature configuration update";
+
+    leaf trigger {
+      type string;
+      description "Observed condition";
+    }
+
+    leaf action {
+      type string;
+      description "System action taken";
+    }
+  }
+}

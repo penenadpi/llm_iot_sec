@@ -1,0 +1,19 @@
+module scenario6 {
+  yang-version 1.1;
+  namespace "urn:example:scenario6";
+  prefix s6;
+
+  container scenario6 {
+    description "Invalid failover decision";
+
+    leaf trigger {
+      type string;
+      description "Observed condition";
+    }
+
+    leaf action {
+      type string;
+      description "System action taken";
+    }
+  }
+}

@@ -1,0 +1,19 @@
+module scenario2 {
+  yang-version 1.1;
+  namespace "urn:example:scenario2";
+  prefix s2;
+
+  container scenario2 {
+    description "Alert from non-existent interface";
+
+    leaf trigger {
+      type string;
+      description "Observed condition";
+    }
+
+    leaf action {
+      type string;
+      description "System action taken";
+    }
+  }
+}
