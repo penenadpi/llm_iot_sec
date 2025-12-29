@@ -1,19 +1,23 @@
-module scenario4 {
-  yang-version 1.1;
-  namespace "urn:example:scenario4";
-  prefix s4;
+module service-autoscaling {
+  namespace "urn:service:autoscaling";
+  prefix sas;
 
-  container scenario4 {
-    description "Scale down during user increase";
-
-    leaf trigger {
-      type string;
-      description "Observed condition";
+  container scaling-state {
+    leaf active-users {
+      type uint32;
     }
-
-    leaf action {
-      type string;
-      description "System action taken";
+    leaf performance-degraded {
+      type boolean;
+    }
+    leaf compute-instances {
+      type uint16;
+    }
+    leaf scaling-action {
+      type enumeration {
+        enum scale-up;
+        enum scale-down;
+        enum no-change;
+      }
     }
   }
 }

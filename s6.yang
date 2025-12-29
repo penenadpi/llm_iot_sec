@@ -1,19 +1,25 @@
-module scenario6 {
-  yang-version 1.1;
-  namespace "urn:example:scenario6";
-  prefix s6;
+module network-failover {
+  namespace "urn:network:failover";
+  prefix nf;
 
-  container scenario6 {
-    description "Invalid failover decision";
-
-    leaf trigger {
-      type string;
-      description "Observed condition";
+  container topology {
+    list node {
+      key "id";
+      leaf id {
+        type string;
+      }
+      leaf active {
+        type boolean;
+      }
     }
+  }
 
-    leaf action {
+  container failover-decision {
+    leaf target-node {
       type string;
-      description "System action taken";
+    }
+    leaf failover-executed {
+      type boolean;
     }
   }
 }

@@ -1,0 +1,17 @@
+<edit-config>
+  <target>
+    <running/>
+  </target>
+  <config>
+    <topology xmlns="urn:network:failover">
+      <node>
+        <id>node-A</id>
+        <active>true</active>
+      </node>
+    </topology>
+    <failover-decision>
+      <target-node>node-X</target-node>
+      <failover-executed>true</failover-executed>
+    </failover-decision>
+  </config>
+</edit-config>

@@ -1,19 +1,16 @@
-module scenario3 {
-  yang-version 1.1;
-  namespace "urn:example:scenario3";
-  prefix s3;
+module gateway-alert-consistency {
+  namespace "urn:gateway:alert-consistency";
+  prefix gac;
 
-  container scenario3 {
-    description "Alert without failure detection";
-
-    leaf trigger {
-      type string;
-      description "Observed condition";
+  container detection-state {
+    leaf wifi-failure {
+      type boolean;
     }
-
-    leaf action {
-      type string;
-      description "System action taken";
+    leaf lorawan-failure {
+      type boolean;
+    }
+    leaf alert-issued {
+      type boolean;
     }
   }
 }

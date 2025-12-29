@@ -1,19 +1,16 @@
-module scenario5 {
-  yang-version 1.1;
-  namespace "urn:example:scenario5";
-  prefix s5;
+module config-update-control {
+  namespace "urn:config:update-control";
+  prefix cuc;
 
-  container scenario5 {
-    description "Premature configuration update";
-
-    leaf trigger {
-      type string;
-      description "Observed condition";
+  container update-state {
+    leaf config-change-needed {
+      type boolean;
     }
-
-    leaf action {
-      type string;
-      description "System action taken";
+    leaf restart-triggered {
+      type boolean;
+    }
+    leaf service-available {
+      type boolean;
     }
   }
 }

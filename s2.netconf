@@ -1,13 +1,15 @@
-<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <edit-config>
-    <target>
-      <running/>
-    </target>
-    <config>
-      <scenario2 xmlns="urn:example:scenario2">
-        <trigger>lorawan-message</trigger>
-        <action>issue-alert</action>
-      </scenario2>
-    </config>
-  </edit-config>
-</rpc>
+<edit-config>
+  <target>
+    <running/>
+  </target>
+  <config>
+    <interfaces xmlns="urn:gateway:interface-monitor">
+      <interface>
+        <name>LoRaWAN</name>
+        <enabled>false</enabled>
+        <failure-detected>true</failure-detected>
+      </interface>
+    </interfaces>
+    <alert-issued>true</alert-issued>
+  </config>
+</edit-config>

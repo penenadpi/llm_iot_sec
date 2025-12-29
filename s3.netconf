@@ -1,13 +1,12 @@
-<rpc message-id="101" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <edit-config>
-    <target>
-      <running/>
-    </target>
-    <config>
-      <scenario3 xmlns="urn:example:scenario3">
-        <trigger>no-failure</trigger>
-        <action>issue-alert</action>
-      </scenario3>
-    </config>
-  </edit-config>
-</rpc>
+<edit-config>
+  <target>
+    <running/>
+  </target>
+  <config>
+    <detection-state xmlns="urn:gateway:alert-consistency">
+      <wifi-failure>false</wifi-failure>
+      <lorawan-failure>false</lorawan-failure>
+      <alert-issued>true</alert-issued>
+    </detection-state>
+  </config>
+</edit-config>
