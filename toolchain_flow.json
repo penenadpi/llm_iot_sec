@@ -2,7 +2,7 @@
     {
         "id": "9d6b8c38551dd5ee",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "IoT safety",
         "disabled": false,
         "info": "",
         "env": []
@@ -12,12 +12,13 @@
         "type": "http in",
         "z": "9d6b8c38551dd5ee",
         "name": "",
-        "url": "/simple",
+        "url": "/currentBehaviorModel",
         "method": "get",
         "upload": false,
+        "skipBodyParsing": false,
         "swaggerDoc": "",
-        "x": 250,
-        "y": 920,
+        "x": 240,
+        "y": 540,
         "wires": [
             [
                 "178e816e06f7fa53"
@@ -33,10 +34,10 @@
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "<h1>Upload a file here:</h1>\n\n<form action=\"/upload\" method=\"POST\" enctype=\"multipart/form-data\">\n    <input type=\"file\" name=\"myFile\" />\n    <input type=\"submit\" value=\"Submit\">\n</form>",
+        "template": "<!DOCTYPE html>\n<html>\n<body>\n\n<img src=\"/behavior.png\"\n     alt=\"Output\"\n     style=\"max-width:100%;height:auto;\" />\n\n</body>\n</html>\n",
         "output": "str",
-        "x": 410,
-        "y": 920,
+        "x": 530,
+        "y": 580,
         "wires": [
             [
                 "de7c30e105fad3fe"
@@ -48,8 +49,8 @@
         "type": "http response",
         "z": "9d6b8c38551dd5ee",
         "name": "",
-        "x": 610,
-        "y": 920,
+        "x": 790,
+        "y": 540,
         "wires": []
     },
     {
@@ -59,8 +60,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1070,
-        "y": 560,
+        "x": 1310,
+        "y": 480,
         "wires": []
     },
     {
@@ -82,25 +83,6 @@
         ]
     },
     {
-        "id": "4669b3589f910d74",
-        "type": "template",
-        "z": "9d6b8c38551dd5ee",
-        "name": "html",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Embedded PNG</title>\n</head>\n<body>\n\n<h2>Activity diagram</h2>\n\n<img src=\"data:image/png;base64,{{image}}\"\n     style=\"max-width:100%; border:1px solid #ccc;\" />\n\n</body>\n</html>\n",
-        "output": "str",
-        "x": 890,
-        "y": 520,
-        "wires": [
-            [
-                "6f3460b17392afe1"
-            ]
-        ]
-    },
-    {
         "id": "6bbd66769d46cc62",
         "type": "function",
         "z": "9d6b8c38551dd5ee",
@@ -117,26 +99,6 @@
         "wires": [
             [
                 "47d871dfaf64dd3b"
-            ]
-        ]
-    },
-    {
-        "id": "47d871dfaf64dd3b",
-        "type": "LLM Chat",
-        "z": "9d6b8c38551dd5ee",
-        "name": "Construct activity diagram",
-        "platform": "fca7f12e28e98b4c",
-        "tools": "",
-        "tool_choice": "none",
-        "conversation_id": "",
-        "user": "return msg.payload",
-        "system": "return \"Generate PlantUML activity diagram based on input. No comments or explanations, pure plantuml, without any additional start/begin tags.\"",
-        "historyLimit": 7,
-        "x": 410,
-        "y": 260,
-        "wires": [
-            [
-                "c58ae279e87c0352"
             ]
         ]
     },
@@ -165,7 +127,7 @@
         "type": "function",
         "z": "9d6b8c38551dd5ee",
         "name": "Render PlantUML",
-        "func": "var gen = plantuml.generate(msg.payload);\ngen.out.pipe(fs.createWriteStream(\"C:/Users/Public/output.png\"));\nreturn msg;",
+        "func": "var gen = plantuml.generate(msg.payload);\ngen.out.pipe(fs.createWriteStream(\"C:/Users/Public/behavior.png\"));\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -186,7 +148,7 @@
         "wires": [
             [
                 "9f160178276c3ed6",
-                "1408a78576fd037b"
+                "7aa4afe3a8e2fea3"
             ]
         ]
     },
@@ -203,32 +165,414 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1010,
-        "y": 120,
+        "x": 970,
+        "y": 60,
         "wires": []
     },
     {
-        "id": "1408a78576fd037b",
+        "id": "47d871dfaf64dd3b",
+        "type": "LLM Chat",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Construct activity diagram",
+        "platform": "fca7f12e28e98b4c",
+        "tools": "",
+        "tool_choice": "none",
+        "conversation_id": "",
+        "user": "return msg.payload",
+        "system": "return \"Generate PlantUML activity diagram based on input. No comments or explanations, pure plantuml, without any additional start/begin tags.\"",
+        "historyLimit": 7,
+        "x": 410,
+        "y": 320,
+        "wires": [
+            [
+                "c58ae279e87c0352"
+            ]
+        ]
+    },
+    {
+        "id": "2df4a519f6893937",
+        "type": "template",
+        "z": "9d6b8c38551dd5ee",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<body>\n\n<img src=\"/behavior.png\"\n     alt=\"Output\"\n     style=\"max-width:100%;height:auto;\" />\n\n</body>\n</html>\n",
+        "output": "str",
+        "x": 1190,
+        "y": 380,
+        "wires": [
+            [
+                "6f3460b17392afe1"
+            ]
+        ]
+    },
+    {
+        "id": "b02ccc4ea3045f87",
+        "type": "delay",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1040,
+        "y": 380,
+        "wires": [
+            [
+                "2df4a519f6893937"
+            ]
+        ]
+    },
+    {
+        "id": "7aa4afe3a8e2fea3",
+        "type": "file",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\behavior.plantuml",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 780,
+        "y": 380,
+        "wires": [
+            [
+                "b02ccc4ea3045f87"
+            ]
+        ]
+    },
+    {
+        "id": "de1c861b23766655",
+        "type": "file in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\behavior.plantuml",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 500,
+        "y": 720,
+        "wires": [
+            [
+                "bf879a79042cb785",
+                "116f5d90e00f34b2"
+            ]
+        ]
+    },
+    {
+        "id": "bf879a79042cb785",
         "type": "function",
         "z": "9d6b8c38551dd5ee",
-        "name": "Embedd image",
-        "func": "const imagePath = \"C:/Users/Public/output.png\"; // CHANGE IF NEEDED\n\nif (!fs.existsSync(imagePath)) {\n    msg.payload = \"<h2>Image not found</h2>\";\n    return msg;\n}\n\n// Convert PNG to Base64\nconst imageBase64 = fs.readFileSync(imagePath).toString(\"base64\");\n\n// Pass to template\nmsg.image = imageBase64;\n\nreturn msg;\n",
+        "name": "Extract states",
+        "func": "// Extract lines that represent activities `: ... ;`\nconst text = msg.payload;\nconst lines = text.split(/\\r?\\n/);\n\n// Collect every activity between : and ;\nlet activities = [];\n\nfor (let line of lines) {\n    const match = line.match(/^\\s*:(.+?);/);\n    if (match) {\n        // Normalize similar actions like True/False\n        let act = match[1].trim();\n\n        // Remove trailing \"to True/False\"\n        act = act.replace(/ to (True|False)$/i, \"\");\n\n        // Remove semicolons, extra spaces\n        act = act.trim();\n\n        if (!activities.includes(act)) {\n            activities.push(act);\n        }\n    }\n}\n\nmsg.activities = activities;\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
-        "libs": [
-            {
-                "var": "fs",
-                "module": "fs"
-            }
-        ],
-        "x": 880,
-        "y": 400,
+        "libs": [],
+        "x": 800,
+        "y": 720,
         "wires": [
             [
-                "4669b3589f910d74"
+                "1636d9cc35ad9415",
+                "860a0ae19499ecbc"
+            ]
+        ]
+    },
+    {
+        "id": "1636d9cc35ad9415",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Check",
+        "func": "// ----- Normalize activities -----\nconst activities = Array.isArray(msg.activities) ? msg.activities : [];\n\n// ----- Normalize rules input -----\nlet rules = [];\nif (Array.isArray(msg.rules)) {\n    rules = msg.rules;\n} else if (typeof msg.rules === \"string\") {\n    rules = msg.rules\n        .split(/\\r?\\n/)\n        .map(r => r.trim())\n        .filter(r => r);\n} else {\n    rules = [];\n}\n\nlet results = [];\nlet passed = true;\n\n// ----- Find the first activity containing a keyword (substring) -----\nfunction findActivityIndex(keyword) {\n    const kw = keyword.toLowerCase();\n    for (let i = 0; i < activities.length; i++) {\n        if (activities[i].toLowerCase().includes(kw)) {\n            return i;\n        }\n    }\n    return -1;\n}\n\n// ----- Evaluate each rule \"a before b\" -----\nrules.forEach(rule => {\n    const parts = rule.split(/before/i);\n    if (parts.length !== 2) {\n        results.push(`Invalid rule: ${rule}`);\n        passed = false;\n        return;\n    }\n\n    const kw1 = parts[0].trim();\n    const kw2 = parts[1].trim();\n\n    const pos1 = findActivityIndex(kw1);\n    const pos2 = findActivityIndex(kw2);\n\n    if (pos1 === -1) {\n        results.push(`No UML activity contains \"${kw1}\"`);\n        passed = false;\n    } else if (pos2 === -1) {\n        results.push(`No UML activity contains \"${kw2}\"`);\n        passed = false;\n    } else if (pos1 < pos2) {\n        results.push(`OK: \"${kw1}\" occurs before \"${kw2}\"`);\n    } else {\n        results.push(`FAIL: \"${kw1}\" does NOT occur before \"${kw2}\"`);\n        passed = false;\n    }\n});\n\n// ----- Output -----\nmsg.payload = { passed, results, activities };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 720,
+        "wires": [
+            [
+                "82b5c98738db9479",
+                "999fba97844ac1f3"
+            ]
+        ]
+    },
+    {
+        "id": "4c32d48b505ae9e2",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "toBase64",
+        "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.rules = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 780,
+        "wires": [
+            [
+                "de1c861b23766655"
+            ]
+        ]
+    },
+    {
+        "id": "10fbbc1d95fa235d",
+        "type": "http in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "url": "/checkRules",
+        "method": "post",
+        "upload": true,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 90,
+        "y": 860,
+        "wires": [
+            [
+                "4c32d48b505ae9e2"
+            ]
+        ]
+    },
+    {
+        "id": "8c016a1392a92624",
+        "type": "http response",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1370,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "860a0ae19499ecbc",
+        "type": "debug",
+        "z": "9d6b8c38551dd5ee",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "82b5c98738db9479",
+        "type": "debug",
+        "z": "9d6b8c38551dd5ee",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "116f5d90e00f34b2",
+        "type": "debug",
+        "z": "9d6b8c38551dd5ee",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "a357514874b7a0a1",
+        "type": "debug",
+        "z": "9d6b8c38551dd5ee",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "999fba97844ac1f3",
+        "type": "template",
+        "z": "9d6b8c38551dd5ee",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<div style=\"font-family:sans-serif; padding:10px;\">\n\n  <h3>Rule Check Status</h3>\n\n  <p>\n    Status:\n    <strong style=\"color: {{payload.passed ? 'green' : 'red'}}\">\n      {{payload.passed ? 'PASSED' : 'FAILED'}}\n    </strong>\n  </p>\n\n  <h4>Results:</h4>\n  <ul>\n  {{#payload.results}}\n    <li>{{.}}</li>\n  {{/payload.results}}\n  </ul>\n\n  <h4>Parsed Activities:</h4>\n  <ul>\n  {{#payload.activities}}\n    <li>{{.}}</li>\n  {{/payload.activities}}\n  </ul>\n\n</div>\n",
+        "output": "str",
+        "x": 1210,
+        "y": 680,
+        "wires": [
+            [
+                "8c016a1392a92624",
+                "a357514874b7a0a1"
+            ]
+        ]
+    },
+    {
+        "id": "41ed0d362a317dc9",
+        "type": "http response",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1430,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "2d0f857866146511",
+        "type": "http in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "url": "/constructRules",
+        "method": "post",
+        "upload": true,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1240,
+        "wires": [
+            [
+                "49a885409ac073e8"
+            ]
+        ]
+    },
+    {
+        "id": "49a885409ac073e8",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "toBase64",
+        "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 180,
+        "y": 1140,
+        "wires": [
+            [
+                "6bfeea9640964728"
+            ]
+        ]
+    },
+    {
+        "id": "0b065ec1847f592e",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "post-process LLM response",
+        "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 1300,
+        "wires": [
+            [
+                "dfd7eb49407012df"
+            ]
+        ]
+    },
+    {
+        "id": "92289616a69f45f1",
+        "type": "LLM Chat",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Construct rules",
+        "platform": "fca7f12e28e98b4c",
+        "tools": "",
+        "tool_choice": "none",
+        "conversation_id": "",
+        "user": "return msg.payload",
+        "system": "return \"Generate sequence validation rules in form a1 before a2 where a1 and a2 are activities, based on behavioral model:\"+msg.payload+\".No comments or explanations added, only rules should be generated. No numbering, just new line to searate them.\"",
+        "historyLimit": 7,
+        "x": 580,
+        "y": 1160,
+        "wires": [
+            [
+                "0b065ec1847f592e"
+            ]
+        ]
+    },
+    {
+        "id": "dfd7eb49407012df",
+        "type": "file",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\rules.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1050,
+        "y": 1180,
+        "wires": [
+            [
+                "41ed0d362a317dc9"
+            ]
+        ]
+    },
+    {
+        "id": "6bfeea9640964728",
+        "type": "file in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\behavior.plantuml",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 360,
+        "y": 1060,
+        "wires": [
+            [
+                "92289616a69f45f1"
             ]
         ]
     },
@@ -241,7 +585,7 @@
         "model": "gpt-4o"
     },
     {
-        "id": "a181f4ef7be0c17b",
+        "id": "ceab02498cfde413",
         "type": "global-config",
         "env": [],
         "modules": {
