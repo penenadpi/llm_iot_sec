@@ -1,6 +1,6 @@
 [
     {
-        "id": "9d6b8c38551dd5ee",
+        "id": "a0df0659c8e1e90f",
         "type": "tab",
         "label": "IoT safety",
         "disabled": false,
@@ -8,9 +8,9 @@
         "env": []
     },
     {
-        "id": "be1ce9847dc8c98a",
+        "id": "b67f56b1f0b5ef78",
         "type": "http in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "url": "/currentBehaviorModel",
         "method": "get",
@@ -21,14 +21,14 @@
         "y": 540,
         "wires": [
             [
-                "178e816e06f7fa53"
+                "1701738b17552b93"
             ]
         ]
     },
     {
-        "id": "178e816e06f7fa53",
+        "id": "1701738b17552b93",
         "type": "template",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "html",
         "field": "payload",
         "fieldType": "msg",
@@ -40,23 +40,23 @@
         "y": 580,
         "wires": [
             [
-                "de7c30e105fad3fe"
+                "29029c1834e38a93"
             ]
         ]
     },
     {
-        "id": "de7c30e105fad3fe",
+        "id": "29029c1834e38a93",
         "type": "http response",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "x": 790,
         "y": 540,
         "wires": []
     },
     {
-        "id": "6f3460b17392afe1",
+        "id": "dbb21e09613712f3",
         "type": "http response",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -65,9 +65,9 @@
         "wires": []
     },
     {
-        "id": "0b87f759b607030c",
+        "id": "2978574d56949b2d",
         "type": "http in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "url": "/analyzeScript",
         "method": "post",
@@ -78,14 +78,14 @@
         "y": 340,
         "wires": [
             [
-                "6bbd66769d46cc62"
+                "0d4eaae98b8d2748"
             ]
         ]
     },
     {
-        "id": "6bbd66769d46cc62",
+        "id": "0d4eaae98b8d2748",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "toBase64",
         "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
         "outputs": 1,
@@ -98,14 +98,14 @@
         "y": 260,
         "wires": [
             [
-                "47d871dfaf64dd3b"
+                "57ac3778fc5e02b4"
             ]
         ]
     },
     {
-        "id": "c58ae279e87c0352",
+        "id": "576c794b59cd2cbc",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "post-process LLM response",
         "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
         "outputs": 1,
@@ -118,14 +118,14 @@
         "y": 260,
         "wires": [
             [
-                "a0f9099a6dd020b6"
+                "ee09329d8bde1989"
             ]
         ]
     },
     {
-        "id": "a0f9099a6dd020b6",
+        "id": "ee09329d8bde1989",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Render PlantUML",
         "func": "var gen = plantuml.generate(msg.payload);\ngen.out.pipe(fs.createWriteStream(\"C:/Users/Public/behavior.png\"));\nreturn msg;",
         "outputs": 1,
@@ -147,15 +147,15 @@
         "y": 260,
         "wires": [
             [
-                "9f160178276c3ed6",
-                "7aa4afe3a8e2fea3"
+                "7c8d286c40a8e29a",
+                "1690acaeae660976"
             ]
         ]
     },
     {
-        "id": "9f160178276c3ed6",
+        "id": "7c8d286c40a8e29a",
         "type": "debug",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Preview PlantUML",
         "active": true,
         "tosidebar": true,
@@ -170,9 +170,9 @@
         "wires": []
     },
     {
-        "id": "47d871dfaf64dd3b",
+        "id": "57ac3778fc5e02b4",
         "type": "LLM Chat",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Construct activity diagram",
         "platform": "fca7f12e28e98b4c",
         "tools": "",
@@ -185,14 +185,14 @@
         "y": 320,
         "wires": [
             [
-                "c58ae279e87c0352"
+                "576c794b59cd2cbc"
             ]
         ]
     },
     {
-        "id": "2df4a519f6893937",
+        "id": "d25b5c33a5862957",
         "type": "template",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "html",
         "field": "payload",
         "fieldType": "msg",
@@ -204,14 +204,14 @@
         "y": 380,
         "wires": [
             [
-                "6f3460b17392afe1"
+                "dbb21e09613712f3"
             ]
         ]
     },
     {
-        "id": "b02ccc4ea3045f87",
+        "id": "769e4f5ab7f6eb5d",
         "type": "delay",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "pauseType": "delay",
         "timeout": "5",
@@ -229,14 +229,14 @@
         "y": 380,
         "wires": [
             [
-                "2df4a519f6893937"
+                "d25b5c33a5862957"
             ]
         ]
     },
     {
-        "id": "7aa4afe3a8e2fea3",
+        "id": "1690acaeae660976",
         "type": "file",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "filename": "C:\\Users\\Public\\behavior.plantuml",
         "filenameType": "str",
@@ -248,14 +248,14 @@
         "y": 380,
         "wires": [
             [
-                "b02ccc4ea3045f87"
+                "769e4f5ab7f6eb5d"
             ]
         ]
     },
     {
-        "id": "de1c861b23766655",
+        "id": "5592e1042f1c2916",
         "type": "file in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "filename": "C:\\Users\\Public\\behavior.plantuml",
         "filenameType": "str",
@@ -268,15 +268,15 @@
         "y": 720,
         "wires": [
             [
-                "bf879a79042cb785",
-                "116f5d90e00f34b2"
+                "89463d124a480736",
+                "4547e5a89319840c"
             ]
         ]
     },
     {
-        "id": "bf879a79042cb785",
+        "id": "89463d124a480736",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Extract states",
         "func": "// Extract lines that represent activities `: ... ;`\nconst text = msg.payload;\nconst lines = text.split(/\\r?\\n/);\n\n// Collect every activity between : and ;\nlet activities = [];\n\nfor (let line of lines) {\n    const match = line.match(/^\\s*:(.+?);/);\n    if (match) {\n        // Normalize similar actions like True/False\n        let act = match[1].trim();\n\n        // Remove trailing \"to True/False\"\n        act = act.replace(/ to (True|False)$/i, \"\");\n\n        // Remove semicolons, extra spaces\n        act = act.trim();\n\n        if (!activities.includes(act)) {\n            activities.push(act);\n        }\n    }\n}\n\nmsg.activities = activities;\nreturn msg;\n",
         "outputs": 1,
@@ -289,15 +289,15 @@
         "y": 720,
         "wires": [
             [
-                "1636d9cc35ad9415",
-                "860a0ae19499ecbc"
+                "fc1babd763afda1a",
+                "ce01bd34b4c2c5e5"
             ]
         ]
     },
     {
-        "id": "1636d9cc35ad9415",
+        "id": "fc1babd763afda1a",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Check",
         "func": "// ----- Normalize activities -----\nconst activities = Array.isArray(msg.activities) ? msg.activities : [];\n\n// ----- Normalize rules input -----\nlet rules = [];\nif (Array.isArray(msg.rules)) {\n    rules = msg.rules;\n} else if (typeof msg.rules === \"string\") {\n    rules = msg.rules\n        .split(/\\r?\\n/)\n        .map(r => r.trim())\n        .filter(r => r);\n} else {\n    rules = [];\n}\n\nlet results = [];\nlet passed = true;\n\n// ----- Find the first activity containing a keyword (substring) -----\nfunction findActivityIndex(keyword) {\n    const kw = keyword.toLowerCase();\n    for (let i = 0; i < activities.length; i++) {\n        if (activities[i].toLowerCase().includes(kw)) {\n            return i;\n        }\n    }\n    return -1;\n}\n\n// ----- Evaluate each rule \"a before b\" -----\nrules.forEach(rule => {\n    const parts = rule.split(/before/i);\n    if (parts.length !== 2) {\n        results.push(`Invalid rule: ${rule}`);\n        passed = false;\n        return;\n    }\n\n    const kw1 = parts[0].trim();\n    const kw2 = parts[1].trim();\n\n    const pos1 = findActivityIndex(kw1);\n    const pos2 = findActivityIndex(kw2);\n\n    if (pos1 === -1) {\n        results.push(`No UML activity contains \"${kw1}\"`);\n        passed = false;\n    } else if (pos2 === -1) {\n        results.push(`No UML activity contains \"${kw2}\"`);\n        passed = false;\n    } else if (pos1 < pos2) {\n        results.push(`OK: \"${kw1}\" occurs before \"${kw2}\"`);\n    } else {\n        results.push(`FAIL: \"${kw1}\" does NOT occur before \"${kw2}\"`);\n        passed = false;\n    }\n});\n\n// ----- Output -----\nmsg.payload = { passed, results, activities };\nreturn msg;\n",
         "outputs": 1,
@@ -310,15 +310,15 @@
         "y": 720,
         "wires": [
             [
-                "82b5c98738db9479",
-                "999fba97844ac1f3"
+                "6eac427ec051f015",
+                "a21c1a006f4b8a2e"
             ]
         ]
     },
     {
-        "id": "4c32d48b505ae9e2",
+        "id": "d9af87b1aea99f9c",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "toBase64",
         "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.rules = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
         "outputs": 1,
@@ -331,14 +331,14 @@
         "y": 780,
         "wires": [
             [
-                "de1c861b23766655"
+                "5592e1042f1c2916"
             ]
         ]
     },
     {
-        "id": "10fbbc1d95fa235d",
+        "id": "7db5b398fa48aa36",
         "type": "http in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "url": "/checkRules",
         "method": "post",
@@ -349,14 +349,14 @@
         "y": 860,
         "wires": [
             [
-                "4c32d48b505ae9e2"
+                "d9af87b1aea99f9c"
             ]
         ]
     },
     {
-        "id": "8c016a1392a92624",
+        "id": "4960c5ba25b273d2",
         "type": "http response",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -365,9 +365,9 @@
         "wires": []
     },
     {
-        "id": "860a0ae19499ecbc",
+        "id": "ce01bd34b4c2c5e5",
         "type": "debug",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "debug 1",
         "active": true,
         "tosidebar": true,
@@ -381,9 +381,9 @@
         "wires": []
     },
     {
-        "id": "82b5c98738db9479",
+        "id": "6eac427ec051f015",
         "type": "debug",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "debug 2",
         "active": true,
         "tosidebar": true,
@@ -397,9 +397,9 @@
         "wires": []
     },
     {
-        "id": "116f5d90e00f34b2",
+        "id": "4547e5a89319840c",
         "type": "debug",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "debug 3",
         "active": true,
         "tosidebar": true,
@@ -413,9 +413,9 @@
         "wires": []
     },
     {
-        "id": "a357514874b7a0a1",
+        "id": "2d6bcb72fe9d3d92",
         "type": "debug",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "debug 4",
         "active": true,
         "tosidebar": true,
@@ -429,9 +429,9 @@
         "wires": []
     },
     {
-        "id": "999fba97844ac1f3",
+        "id": "a21c1a006f4b8a2e",
         "type": "template",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "html",
         "field": "payload",
         "fieldType": "msg",
@@ -443,15 +443,15 @@
         "y": 680,
         "wires": [
             [
-                "8c016a1392a92624",
-                "a357514874b7a0a1"
+                "4960c5ba25b273d2",
+                "2d6bcb72fe9d3d92"
             ]
         ]
     },
     {
-        "id": "41ed0d362a317dc9",
+        "id": "5f177a78334c873b",
         "type": "http response",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "statusCode": "",
         "headers": {},
@@ -460,9 +460,9 @@
         "wires": []
     },
     {
-        "id": "2d0f857866146511",
+        "id": "4732ecf5fcd12d30",
         "type": "http in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "url": "/constructRules",
         "method": "post",
@@ -473,14 +473,14 @@
         "y": 1240,
         "wires": [
             [
-                "49a885409ac073e8"
+                "d3b3100ab75a1db5"
             ]
         ]
     },
     {
-        "id": "49a885409ac073e8",
+        "id": "d3b3100ab75a1db5",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "toBase64",
         "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
         "outputs": 1,
@@ -493,14 +493,14 @@
         "y": 1140,
         "wires": [
             [
-                "6bfeea9640964728"
+                "1647c6469d31b01e"
             ]
         ]
     },
     {
-        "id": "0b065ec1847f592e",
+        "id": "9d17a483d2813689",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "post-process LLM response",
         "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
         "outputs": 1,
@@ -513,14 +513,14 @@
         "y": 1300,
         "wires": [
             [
-                "dfd7eb49407012df"
+                "d563c66aa75eef17"
             ]
         ]
     },
     {
-        "id": "92289616a69f45f1",
+        "id": "b9aeb1daf89ca6f8",
         "type": "LLM Chat",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "Construct rules",
         "platform": "fca7f12e28e98b4c",
         "tools": "",
@@ -533,14 +533,14 @@
         "y": 1160,
         "wires": [
             [
-                "0b065ec1847f592e"
+                "9d17a483d2813689"
             ]
         ]
     },
     {
-        "id": "dfd7eb49407012df",
+        "id": "d563c66aa75eef17",
         "type": "file",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "filename": "C:\\Users\\Public\\rules.txt",
         "filenameType": "str",
@@ -552,14 +552,14 @@
         "y": 1180,
         "wires": [
             [
-                "41ed0d362a317dc9"
+                "5f177a78334c873b"
             ]
         ]
     },
     {
-        "id": "6bfeea9640964728",
+        "id": "1647c6469d31b01e",
         "type": "file in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "filename": "C:\\Users\\Public\\behavior.plantuml",
         "filenameType": "str",
@@ -572,43 +572,43 @@
         "y": 1060,
         "wires": [
             [
-                "92289616a69f45f1"
+                "b9aeb1daf89ca6f8"
             ]
         ]
     },
     {
-        "id": "6272ab54aca48825",
+        "id": "f00e3fe9187019c2",
         "type": "http response",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 1950,
-        "y": 1620,
+        "x": 1350,
+        "y": 1860,
         "wires": []
     },
     {
-        "id": "9b276d6fc5727df2",
+        "id": "40b2714cb63e99c9",
         "type": "http in",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
-        "url": "/analyzeValues",
+        "url": "/constructMetamodel",
         "method": "post",
         "upload": true,
         "skipBodyParsing": false,
         "swaggerDoc": "",
-        "x": 100,
-        "y": 1600,
+        "x": 110,
+        "y": 1760,
         "wires": [
             [
-                "9684ceec8fd992e9"
+                "018161963f2d027b"
             ]
         ]
     },
     {
-        "id": "9684ceec8fd992e9",
+        "id": "018161963f2d027b",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "toBase64",
         "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
         "outputs": 1,
@@ -617,18 +617,18 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 340,
-        "y": 1500,
+        "x": 260,
+        "y": 1640,
         "wires": [
             [
-                "7796833344d27267"
+                "a4fef945b8bafd4e"
             ]
         ]
     },
     {
-        "id": "f35f35612b225034",
+        "id": "de1c82720852e5c1",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "post-process LLM response",
         "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
         "outputs": 1,
@@ -637,129 +637,320 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 800,
-        "y": 1660,
+        "x": 700,
+        "y": 1640,
         "wires": [
             [
-                "6d3350159a5af110"
+                "0cc1a3bf8f549af4"
             ]
         ]
     },
     {
-        "id": "7796833344d27267",
+        "id": "bdaa4859c2b9f39f",
+        "type": "debug",
+        "z": "a0df0659c8e1e90f",
+        "name": "Preview PlantUML",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1270,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "a4fef945b8bafd4e",
         "type": "LLM Chat",
-        "z": "9d6b8c38551dd5ee",
-        "name": "Construct rules",
+        "z": "a0df0659c8e1e90f",
+        "name": "Construct class diagram",
         "platform": "fca7f12e28e98b4c",
         "tools": "",
         "tool_choice": "none",
         "conversation_id": "",
         "user": "return msg.payload",
-        "system": "return \"Extract configuratio parameters in CSV format: name, value, one per line based on given configuration file. Pure CSV without any comments or additional content or delimiters.\"",
+        "system": "return \"Generate simplified PlantUML class diagram based on input. No comments or explanations, pure plantuml, without any additional start/begin tags.\"",
         "historyLimit": 7,
-        "x": 580,
+        "x": 470,
         "y": 1520,
         "wires": [
             [
-                "f35f35612b225034"
+                "de1c82720852e5c1"
             ]
         ]
     },
     {
-        "id": "6d3350159a5af110",
+        "id": "7a96f8d46f5f5c1f",
+        "type": "template",
+        "z": "a0df0659c8e1e90f",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<div style=\"font-family: monospace; white-space: pre-wrap;\">\n  <pre>{{payload}}</pre>\n</div>\n",
+        "output": "str",
+        "x": 1230,
+        "y": 1760,
+        "wires": [
+            [
+                "f00e3fe9187019c2"
+            ]
+        ]
+    },
+    {
+        "id": "0cc1a3bf8f549af4",
         "type": "file",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "",
-        "filename": "C:\\Users\\Public\\values.txt",
+        "filename": "C:\\Users\\Public\\metamodel.plantuml",
         "filenameType": "str",
         "appendNewline": true,
         "createDir": false,
         "overwriteFile": "true",
         "encoding": "none",
-        "x": 1050,
-        "y": 1540,
+        "x": 1030,
+        "y": 1620,
         "wires": [
             [
-                "74179a40c05232de"
+                "7a96f8d46f5f5c1f",
+                "bdaa4859c2b9f39f"
             ]
         ]
     },
     {
-        "id": "d32ad48b14dafcab",
+        "id": "392f8185cc7f6608",
+        "type": "http in",
+        "z": "a0df0659c8e1e90f",
+        "name": "",
+        "url": "/currentMetamodel",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 2000,
+        "wires": [
+            [
+                "9e538e8a8fe3fc5a"
+            ]
+        ]
+    },
+    {
+        "id": "9e538e8a8fe3fc5a",
+        "type": "template",
+        "z": "a0df0659c8e1e90f",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<body>\n\n<img src=\"/metamodel.png\"\n     alt=\"Output\"\n     style=\"max-width:100%;height:auto;\" />\n\n</body>\n</html>\n",
+        "output": "str",
+        "x": 530,
+        "y": 2040,
+        "wires": [
+            [
+                "c639c3fb4218cac9"
+            ]
+        ]
+    },
+    {
+        "id": "c639c3fb4218cac9",
+        "type": "http response",
+        "z": "a0df0659c8e1e90f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 2000,
+        "wires": []
+    },
+    {
+        "id": "a92a70d1a8869349",
+        "type": "http response",
+        "z": "a0df0659c8e1e90f",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1470,
+        "y": 2300,
+        "wires": []
+    },
+    {
+        "id": "e28506d8b88a618f",
+        "type": "http in",
+        "z": "a0df0659c8e1e90f",
+        "name": "",
+        "url": "/constructSystem",
+        "method": "post",
+        "upload": true,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 2440,
+        "wires": [
+            [
+                "b98aee7963da1a64"
+            ]
+        ]
+    },
+    {
+        "id": "b98aee7963da1a64",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
-        "name": "function 1",
-        "func": "//\n// Expect:\n// msg.values = CSV string \"name,value\"\n// msg.rules  = CSV string \"name,min,max\" or \"name,allowed,allowed\"\n//\nmsg.rules = msg.payload\n\n\nfunction parseCsv(str) {\n    return str\n        .trim()\n        .split(/\\r?\\n/)\n        .map(l => l.split(',').map(f => f.trim()));\n}\n\n// Parse VALUES\nlet valuesCsv = typeof msg.values === \"string\" ? parseCsv(msg.values) : [];\nlet values = {};\nvaluesCsv.forEach(([name, val]) => {\n    if (name) values[name.toLowerCase()] = val;\n});\n\n// Parse RULES\nlet rulesCsv = typeof msg.rules === \"string\" ? parseCsv(msg.rules) : [];\nlet rules = {};\nlet header = rulesCsv.shift();   // expect name,min,max or name,allowed\nrulesCsv.forEach(([name, v1, v2]) => {\n    if (!name) return;\n\n    let key = name.toLowerCase();\n    if (v2 !== undefined && v2 !== \"\") {\n        // numeric range rule\n        rules[key] = {\n            type: \"range\",\n            min: isNaN(+v1) ? v1 : +v1,\n            max: isNaN(+v2) ? v2 : +v2\n        };\n    } else {\n        // single allowed value or list\n        rules[key] = {\n            type: \"allowed\",\n            allowed: v1.split('|').map(a => a.trim().toLowerCase())\n        };\n    }\n});\n\nlet results = [];\nlet passed = true;\n\n// Evaluate\nfor (let key in values) {\n    const raw = values[key];\n    const rule = rules[key];\n\n    if (!rule) {\n        results.push(`WARN: no rule for \"${key}\", value=\"${raw}\"`);\n        continue;\n    }\n\n    // boolean test\n    if (raw === \"true\" || raw === \"false\") {\n        let bval = raw === \"true\";\n        if (rule.type === \"allowed\") {\n            if (rule.allowed.includes(raw.toLowerCase())) {\n                results.push(`OK: ${key}=\"${raw}\" allowed`);\n            } else {\n                results.push(`FAIL: ${key}=\"${raw}\" not allowed`);\n                passed = false;\n            }\n        } else {\n            // numeric rule doesn't apply\n            results.push(`WARN: ${key} is boolean, rules expect numeric`);\n        }\n    }\n\n    // numeric test\n    else if (!isNaN(+raw)) {\n        let n = +raw;\n        if (rule.type === \"range\") {\n            if (n >= rule.min && n <= rule.max) {\n                results.push(`OK: ${key}=${n} in [${rule.min},${rule.max}]`);\n            } else {\n                results.push(`FAIL: ${key}=${n} outside [${rule.min},${rule.max}]`);\n                passed = false;\n            }\n        } else {\n            results.push(`WARN: ${key} numeric but rules expect allowed`);\n        }\n    }\n\n    // string enum test\n    else {\n        if (rule.type === \"allowed\") {\n            if (rule.allowed.includes(raw.toLowerCase())) {\n                results.push(`OK: ${key}=\"${raw}\" allowed`);\n            } else {\n                results.push(`FAIL: ${key}=\"${raw}\" not allowed`);\n                passed = false;\n            }\n        } else {\n            results.push(`WARN: ${key} string but rule is numeric`);\n        }\n    }\n}\n\nmsg.payload = { passed, results, values: valuesCsv, rules: rulesCsv };\nreturn msg;\n",
+        "z": "a0df0659c8e1e90f",
+        "name": "toBase64",
+        "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 2320,
+        "wires": [
+            [
+                "e2c14fae41c96218"
+            ]
+        ]
+    },
+    {
+        "id": "4a8e758f5521751d",
+        "type": "function",
+        "z": "a0df0659c8e1e90f",
+        "name": "post-process LLM response",
+        "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1620,
-        "y": 1620,
+        "x": 700,
+        "y": 2320,
         "wires": [
             [
-                "739c7247f55135f3"
+                "ae8c7104840f10e0",
+                "f90bbab450d89c1b"
             ]
         ]
     },
     {
-        "id": "a6ea6404432ddd29",
-        "type": "file in",
-        "z": "9d6b8c38551dd5ee",
+        "id": "f90bbab450d89c1b",
+        "type": "debug",
+        "z": "a0df0659c8e1e90f",
+        "name": "Preview XMI",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 2120,
+        "wires": []
+    },
+    {
+        "id": "6ff70e68f8d775af",
+        "type": "LLM Chat",
+        "z": "a0df0659c8e1e90f",
+        "name": "Construct system",
+        "platform": "fca7f12e28e98b4c",
+        "tools": "",
+        "tool_choice": "none",
+        "conversation_id": "",
+        "user": "return msg.payload",
+        "system": "return \"Generate instance model in Ecore XMI format based on PlantUML class diagram used as metamodel. No comments or explanations, pure plantuml, without any comments, delimiters, additional start/begin tags. Metamodel is:\" + msg.payload;",
+        "historyLimit": 7,
+        "x": 690,
+        "y": 2200,
+        "wires": [
+            [
+                "4a8e758f5521751d"
+            ]
+        ]
+    },
+    {
+        "id": "ae8c7104840f10e0",
+        "type": "file",
+        "z": "a0df0659c8e1e90f",
         "name": "",
-        "filename": "C:\\Users\\Public\\ranges.txt",
+        "filename": "C:\\Users\\Public\\system.xmi",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1000,
+        "y": 2320,
+        "wires": [
+            [
+                "35f60274c34126c6"
+            ]
+        ]
+    },
+    {
+        "id": "e2c14fae41c96218",
+        "type": "file in",
+        "z": "a0df0659c8e1e90f",
+        "name": "",
+        "filename": "C:\\Users\\Public\\metamodel.plantuml",
         "filenameType": "str",
         "format": "utf8",
         "chunk": false,
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 1450,
-        "y": 1520,
+        "x": 270,
+        "y": 2140,
         "wires": [
             [
-                "d32ad48b14dafcab"
+                "8677491172a9d7a6"
             ]
         ]
     },
     {
-        "id": "74179a40c05232de",
+        "id": "8677491172a9d7a6",
         "type": "function",
-        "z": "9d6b8c38551dd5ee",
-        "name": "function 2",
-        "func": "msg.values = msg.payload;\nreturn msg;",
+        "z": "a0df0659c8e1e90f",
+        "name": "function 3",
+        "func": "msg.payload.metamodel = msg.payload;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1260,
-        "y": 1620,
+        "x": 480,
+        "y": 2200,
         "wires": [
             [
-                "a6ea6404432ddd29"
+                "6ff70e68f8d775af"
             ]
         ]
     },
     {
-        "id": "739c7247f55135f3",
+        "id": "35f60274c34126c6",
         "type": "template",
-        "z": "9d6b8c38551dd5ee",
+        "z": "a0df0659c8e1e90f",
         "name": "html",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "<div style=\"font-family:sans-serif; padding:10px;\">\n\n  <h3>Value Check Status</h3>\n\n  <p>\n    Status:\n    <strong style=\"color: {{payload.passed ? 'green' : 'red'}}\">\n      {{payload.passed ? 'PASSED' : 'FAILED'}}\n    </strong>\n  </p>\n\n  <h4>Results:</h4>\n  <ul>\n  {{#payload.results}}\n    {{# . }}\n    <li \n      style=\"color: \n        {{#startsWithOK .}}green{{/startsWithOK .}}\n        {{#startsWithFAIL .}}red{{/startsWithFAIL .}}\n        {{#startsWithWARN .}}orange{{/startsWithWARN .}}\n      \">\n      {{.}}\n    </li>\n    {{/ . }}\n  {{/payload.results}}\n  </ul>\n\n</div>\n",
+        "template": "<div style=\"font-family: monospace; white-space: pre-wrap;\">\n  <pre>{{payload}}</pre>\n</div>\n",
         "output": "str",
-        "x": 1830,
-        "y": 1520,
+        "x": 1250,
+        "y": 2240,
         "wires": [
             [
-                "6272ab54aca48825"
+                "a92a70d1a8869349"
             ]
         ]
     },
@@ -772,7 +963,7 @@
         "model": "gpt-4o"
     },
     {
-        "id": "2e9f7673cf25a676",
+        "id": "10c2d66cd6c19726",
         "type": "global-config",
         "env": [],
         "modules": {
