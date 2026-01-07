@@ -577,6 +577,193 @@
         ]
     },
     {
+        "id": "6272ab54aca48825",
+        "type": "http response",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1950,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "9b276d6fc5727df2",
+        "type": "http in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "url": "/analyzeValues",
+        "method": "post",
+        "upload": true,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1600,
+        "wires": [
+            [
+                "9684ceec8fd992e9"
+            ]
+        ]
+    },
+    {
+        "id": "9684ceec8fd992e9",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "toBase64",
+        "func": "msg.name = msg.req.files[0].originalname;\n\nif (msg.req.files[0].mimetype.includes('image')) {\n    msg.payload = `<img src=\"data:image/gif;base64,${msg.req.files[0].buffer.toString('base64')}\">`;\n} else {\n    msg.payload.user = msg.req.files[0].buffer.toString();\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1500,
+        "wires": [
+            [
+                "7796833344d27267"
+            ]
+        ]
+    },
+    {
+        "id": "f35f35612b225034",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "post-process LLM response",
+        "func": "msg.payload = msg.payload[0].args.response;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 1660,
+        "wires": [
+            [
+                "6d3350159a5af110"
+            ]
+        ]
+    },
+    {
+        "id": "7796833344d27267",
+        "type": "LLM Chat",
+        "z": "9d6b8c38551dd5ee",
+        "name": "Construct rules",
+        "platform": "fca7f12e28e98b4c",
+        "tools": "",
+        "tool_choice": "none",
+        "conversation_id": "",
+        "user": "return msg.payload",
+        "system": "return \"Extract configuratio parameters in CSV format: name, value, one per line based on given configuration file. Pure CSV without any comments or additional content or delimiters.\"",
+        "historyLimit": 7,
+        "x": 580,
+        "y": 1520,
+        "wires": [
+            [
+                "f35f35612b225034"
+            ]
+        ]
+    },
+    {
+        "id": "6d3350159a5af110",
+        "type": "file",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\values.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1050,
+        "y": 1540,
+        "wires": [
+            [
+                "74179a40c05232de"
+            ]
+        ]
+    },
+    {
+        "id": "d32ad48b14dafcab",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "function 1",
+        "func": "//\n// Expect:\n// msg.values = CSV string \"name,value\"\n// msg.rules  = CSV string \"name,min,max\" or \"name,allowed,allowed\"\n//\nmsg.rules = msg.payload\n\n\nfunction parseCsv(str) {\n    return str\n        .trim()\n        .split(/\\r?\\n/)\n        .map(l => l.split(',').map(f => f.trim()));\n}\n\n// Parse VALUES\nlet valuesCsv = typeof msg.values === \"string\" ? parseCsv(msg.values) : [];\nlet values = {};\nvaluesCsv.forEach(([name, val]) => {\n    if (name) values[name.toLowerCase()] = val;\n});\n\n// Parse RULES\nlet rulesCsv = typeof msg.rules === \"string\" ? parseCsv(msg.rules) : [];\nlet rules = {};\nlet header = rulesCsv.shift();   // expect name,min,max or name,allowed\nrulesCsv.forEach(([name, v1, v2]) => {\n    if (!name) return;\n\n    let key = name.toLowerCase();\n    if (v2 !== undefined && v2 !== \"\") {\n        // numeric range rule\n        rules[key] = {\n            type: \"range\",\n            min: isNaN(+v1) ? v1 : +v1,\n            max: isNaN(+v2) ? v2 : +v2\n        };\n    } else {\n        // single allowed value or list\n        rules[key] = {\n            type: \"allowed\",\n            allowed: v1.split('|').map(a => a.trim().toLowerCase())\n        };\n    }\n});\n\nlet results = [];\nlet passed = true;\n\n// Evaluate\nfor (let key in values) {\n    const raw = values[key];\n    const rule = rules[key];\n\n    if (!rule) {\n        results.push(`WARN: no rule for \"${key}\", value=\"${raw}\"`);\n        continue;\n    }\n\n    // boolean test\n    if (raw === \"true\" || raw === \"false\") {\n        let bval = raw === \"true\";\n        if (rule.type === \"allowed\") {\n            if (rule.allowed.includes(raw.toLowerCase())) {\n                results.push(`OK: ${key}=\"${raw}\" allowed`);\n            } else {\n                results.push(`FAIL: ${key}=\"${raw}\" not allowed`);\n                passed = false;\n            }\n        } else {\n            // numeric rule doesn't apply\n            results.push(`WARN: ${key} is boolean, rules expect numeric`);\n        }\n    }\n\n    // numeric test\n    else if (!isNaN(+raw)) {\n        let n = +raw;\n        if (rule.type === \"range\") {\n            if (n >= rule.min && n <= rule.max) {\n                results.push(`OK: ${key}=${n} in [${rule.min},${rule.max}]`);\n            } else {\n                results.push(`FAIL: ${key}=${n} outside [${rule.min},${rule.max}]`);\n                passed = false;\n            }\n        } else {\n            results.push(`WARN: ${key} numeric but rules expect allowed`);\n        }\n    }\n\n    // string enum test\n    else {\n        if (rule.type === \"allowed\") {\n            if (rule.allowed.includes(raw.toLowerCase())) {\n                results.push(`OK: ${key}=\"${raw}\" allowed`);\n            } else {\n                results.push(`FAIL: ${key}=\"${raw}\" not allowed`);\n                passed = false;\n            }\n        } else {\n            results.push(`WARN: ${key} string but rule is numeric`);\n        }\n    }\n}\n\nmsg.payload = { passed, results, values: valuesCsv, rules: rulesCsv };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1620,
+        "y": 1620,
+        "wires": [
+            [
+                "739c7247f55135f3"
+            ]
+        ]
+    },
+    {
+        "id": "a6ea6404432ddd29",
+        "type": "file in",
+        "z": "9d6b8c38551dd5ee",
+        "name": "",
+        "filename": "C:\\Users\\Public\\ranges.txt",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 1450,
+        "y": 1520,
+        "wires": [
+            [
+                "d32ad48b14dafcab"
+            ]
+        ]
+    },
+    {
+        "id": "74179a40c05232de",
+        "type": "function",
+        "z": "9d6b8c38551dd5ee",
+        "name": "function 2",
+        "func": "msg.values = msg.payload;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 1620,
+        "wires": [
+            [
+                "a6ea6404432ddd29"
+            ]
+        ]
+    },
+    {
+        "id": "739c7247f55135f3",
+        "type": "template",
+        "z": "9d6b8c38551dd5ee",
+        "name": "html",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<div style=\"font-family:sans-serif; padding:10px;\">\n\n  <h3>Value Check Status</h3>\n\n  <p>\n    Status:\n    <strong style=\"color: {{payload.passed ? 'green' : 'red'}}\">\n      {{payload.passed ? 'PASSED' : 'FAILED'}}\n    </strong>\n  </p>\n\n  <h4>Results:</h4>\n  <ul>\n  {{#payload.results}}\n    {{# . }}\n    <li \n      style=\"color: \n        {{#startsWithOK .}}green{{/startsWithOK .}}\n        {{#startsWithFAIL .}}red{{/startsWithFAIL .}}\n        {{#startsWithWARN .}}orange{{/startsWithWARN .}}\n      \">\n      {{.}}\n    </li>\n    {{/ . }}\n  {{/payload.results}}\n  </ul>\n\n</div>\n",
+        "output": "str",
+        "x": 1830,
+        "y": 1520,
+        "wires": [
+            [
+                "6272ab54aca48825"
+            ]
+        ]
+    },
+    {
         "id": "fca7f12e28e98b4c",
         "type": "platform-configuration",
         "name": "prompt 1",
@@ -585,7 +772,7 @@
         "model": "gpt-4o"
     },
     {
-        "id": "ceab02498cfde413",
+        "id": "2e9f7673cf25a676",
         "type": "global-config",
         "env": [],
         "modules": {
