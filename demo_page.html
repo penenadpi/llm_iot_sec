@@ -40,5 +40,39 @@
   <button type="submit">Upload</button>
 </form>
 
+<br><br>
+
+<h3>Construct Metamodel</h3>
+<form action="http://localhost:1880/constructMetamodel" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <input type="file" name="file" accept=".txt" required>
+  <button type="submit">Upload</button>
+</form>
+
+<br><br>
+
+<h3>Construct System</h3>
+<form action="http://localhost:1880/constructSystem" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <input type="file" name="file" accept=".txt" required>
+  <button type="submit">Upload</button>
+</form>
+
+<br><br>
+
+<h3>Get Current Metamodel</h3>
+<form action="http://localhost:1880/currentMetamodel" method="GET">
+  <button type="submit">Fetch</button>
+</form>
+
+<br><br>
+
+<h3>Get Current Behavior Model</h3>
+<form action="http://localhost:1880/currentBehaviorModel" method="GET">
+  <button type="submit">Fetch</button>
+</form>
+
 </body>
 </html>
