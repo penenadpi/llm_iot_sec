@@ -1,0 +1,2 @@
+WiFi failure should occur before alert
+Detection should occur before any failure 

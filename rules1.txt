@@ -1,0 +1,3 @@
+Detection State before WiFi Failure
+WiFi Failure before LoRaWAN Failure
+LoRaWAN Failure before Issue Alert
