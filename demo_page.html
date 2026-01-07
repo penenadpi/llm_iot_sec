@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>Upload YANG File</h3>
+
+<form action="http://localhost:1880/analyzeScript" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <input type="file" name="file" accept=".yang" required>
+  <button type="submit">Upload</button>
+</form>
+
+<br><br>
+
+<h3>Upload Rules File</h3>
+
+<form action="http://localhost:1880/checkRules" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <input type="file" name="file" accept=".txt" required>
+  <button type="submit">Upload</button>
+</form>
+
+<br><br>
+
+<h3>Construct Rules from File</h3>
+
+<form action="http://localhost:1880/constructRules" 
+      method="POST" 
+      enctype="multipart/form-data">
+  <input type="file" name="file" accept=".txt" required>
+  <button type="submit">Upload</button>
+</form>
+
+</body>
+</html>
